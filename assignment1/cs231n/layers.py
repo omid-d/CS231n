@@ -781,7 +781,16 @@ def svm_loss(x, y):
     ###########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    N = x.shape[0]
+    correct_class_scores = x[np.arange(N), y]
+    diffs = np.maximum(0, x - correct_class_scores[:, np.newaxis] + 1.0)
+    diffs[np.arange(N), y] = 0
+    loss = np.sum(diffs) / N
+    binary_sum = np.sum(diffs > 0, axis=1)
+    dx = np.zeros_like(x)
+    dx[diffs > 0] = 1
+    dx[np.arange(N), y] -= binary_sum
+    dx /= N
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ###########################################################################
